@@ -1,19 +1,59 @@
 local M = {}
 
------@class PeepConfig
------@field
+---@class PeepUiSettings
+---@field preview nui_popup_options
+---@field list nui_popup_options
 
+---@class PeepConfig
+---@field settings PeepUiSettings
+
+---@class PeepUserConfig
+---@field settings? PeepUiSettings
+
+--- PeepConfig
+---@return PeepConfig
 function M.get_default_config()
+  ---@type PeepConfig
   local config = {
-    name = 'peep',
+    settings = {
+      preview = {
+        enter = false,
+        focusable = true,
+        border = { style = 'single' },
+        buf_options = {
+          modifiable = true,
+          readonly = false,
+        },
+        win_options = {
+          winhighlight = 'Normal:Normal,FloatBorder:FloatBorder',
+          winbar = '',
+        },
+      },
+      list = {
+        enter = true,
+        focusable = true,
+        border = { style = 'single' },
+        buf_options = {
+          modifiable = true,
+          readonly = false,
+        },
+        win_options = {
+          winhighlight = 'Normal:Normal,FloatBorder:FloatBorder',
+        },
+      },
+    },
   }
+
   return config
 end
 
-function M.merge(new_config, config)
-  new_config = new_config or {}
+---@param user_config PeepUserConfig
+---@param config PeepConfig
+---@return PeepConfig
+function M.merge_config(user_config, config)
+  user_config = user_config or {}
   local _config = config or M.get_default_config()
-  _config = vim.tbl_extend('force', config, new_config)
+  _config = vim.tbl_extend('force', config, user_config)
   return _config
 end
 
